@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: afe874772531b2a46a62e3687a1fb68e
   - enabled: 1
+    path: Assets/Scenes/DragGame.unity
+    guid: 106bbac0fbef43a4fa8d9c472b19dd03
+  - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: c3a617c57adc4db4683ad306b5241400
   m_configObjects: {}
