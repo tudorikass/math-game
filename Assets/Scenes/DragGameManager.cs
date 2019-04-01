@@ -5,69 +5,69 @@ using UnityEngine;
 public class DragGameManager : MonoBehaviour
 {
 
-
-    public LayerMask TouchInputMask;
+ 
+   // public LayerMask TouchInputMask;
     //This mask makes sure that only things we want to react to the raycast are reacting.
 
-    private Vector3 pos;
-    private Vector3 touchedPos;
-
+   // private Vector3 pos;
+   // private Vector3 touchedPos;
+    //https://www.youtube.com/watch?v=p7akGCRgBLA
+    [SerializeField]
+    private Transform bearPlace;
+    private Vector2 initialPosition;
+    private Vector2 mousePosition;
+    public float deltaX, deltaY;
+    public static bool locked;
 
     void Start()
     {
-        Input.multiTouchEnabled = true;
-        pos = new Vector3(transform.position.x, transform.position.y);
+        initialPosition = transform.position;
+        Debug.Log("merge:");
+        // Input.multiTouchEnabled = true;
         //Saving this here in case we want to revert the object back to it's original position
     }
-    private Vector3 offset;
 
-    private float dist;
-    private Vector3 v3Offset;
-    private Plane plane;
-    private bool ObjectMouseDown = false;
-    public GameObject linkedObject;
 
-    void OnMouseDown()
+    private void OnMouseDown()
     {
-        plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        float dist;
-        plane.Raycast(ray, out dist);
-        v3Offset = transform.position - ray.GetPoint(dist);
-        ObjectMouseDown = true;
-    }
-
-    void OnMouseDrag()
-    {
-        if (ObjectMouseDown == true)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            float dist;
-            plane.Raycast(ray, out dist);
-            Vector3 v3Pos = ray.GetPoint(dist);
-            v3Pos.z = gameObject.transform.position.z;
-            v3Offset.z = 0;
-            transform.position = v3Pos + v3Offset;
-
-            if (linkedObject != null)
-            {
-                linkedObject.transform.position = v3Pos + v3Offset;
-            }
+        Debug.Log("merge:");
+        if (!locked) { 
+            deltaX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.position.x;
+            deltaY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y - transform.position.y;
+            Debug.Log("merge:");
         }
     }
 
-    void OnMouseOut()
+    private void OnMouseDrag()
     {
-        ObjectMouseDown = false;
+        if (!locked)
+        {
+            mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = new Vector2(mousePosition.x - deltaX, mousePosition.y - deltaY);
+        }
     }
 
-    void Update()
+    private void OnMouseUp()
+    {
+            if(Mathf.Abs(transform.position.x- bearPlace.position.x) <=0.5f &&
+                Mathf.Abs(transform.position.y-bearPlace.position.y) <= 0.5f)
+        {
+            transform.position = new Vector2(bearPlace.position.x, bearPlace.position.y);
+            locked = true;
+        }
+        else
+        {
+            transform.position = new Vector2(initialPosition.x, initialPosition.y);
+        }
+    }
+
+    /*void Update()
     {
         //If mouse button 0 is down
       
         for (int i = 0; i < Input.touchCount; ++i)
         {
-            if (Input.GetTouch(i).phase == TouchPhase.Stationary || Input.GetTouch(i).phase == TouchPhase.Moved || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+            if (Input.GetTouch(i).phase == TouchPhase.Stationary || Input.GetTouch(i).phase == TouchPhase.Moved)
             //This only pays attention if the finger is touching for more than a frame.
 
             {
@@ -99,6 +99,6 @@ public class DragGameManager : MonoBehaviour
             }
         }
 
-    }
+    }*/
 }
 
