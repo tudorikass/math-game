@@ -21,6 +21,7 @@ public class DragGameManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("merge:");
         initialPosition = transform.position;
         Debug.Log("merge:");
         // Input.multiTouchEnabled = true;
